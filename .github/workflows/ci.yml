@@ -29,7 +29,20 @@ jobs:
       - name: Run Tests
         run: npm test
 
-      - name: Deploy to AWS
-        if: github.ref == 'refs/heads/main'
+      ############################################
+      #        AWS CREDENTIAL CONFIGURATION      #
+      ############################################
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1   # change region if needed
+
+      ############################################
+      #              DEPLOY TO S3               #
+      ############################################
+      - name: Deploy to AWS S3
+        if: github.ref == 'refs/heads/main'    # only deploy on main
         run: |
           aws s3 sync . s3://addemployeeeeeee
